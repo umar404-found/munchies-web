@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu - Munchies</title>
+  <link rel="icon" type="image/png" href="Logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ================================
+       NAVBAR - FIXED TOP
+       ================================ -->
+  <nav class="navbar">
+    <div class="navbar-logo">
+      <a href="index.html">
+        <img src="Logo.png" alt="Munchies Logo">
+      </a>
+    </div>
+    <ul class="navbar-menu">
+      <li><a href="index.html" class="navbar-link">Home</a></li>
+      <li><a href="index.html#outlet" class="navbar-link">Outlet</a></li>
+      <li><a href="menu.html" class="navbar-link active">Menu</a></li>
+      <li><a href="franchise.html" class="navbar-link">Franchise</a></li>
+    </ul>
+  </nav>
+
+  <!-- ================================
+       MENU SECTION - 3 LAYER OUT-OF-BOUNDS 3D POP-OUT (CLEAN TANPA BADGE)
+       ================================ -->
+  <section class="menu-section">
+    <h1 class="menu-title">My Favorit Menu Gweh</h1>
+    
+    <div class="menu-grid">
+      <!-- Card 1: Pisang Goreng -->
+      <div class="menu-card" data-menu="pisang-goreng">
+        <div class="menu-card-bg">
+          <img src="bg_menu_kayu.png" alt="Latar Meja Munchies" class="menu-bg-img">
+          <div class="menu-bg-vignette"></div>
+          <div class="glare-3d-layer"></div>
+        </div>
+        <div class="menu-plate-shadow"></div>
+        <img src="pg_original.png" alt="Pisang Goreng" class="menu-food-pop">
+        <div class="menu-overlay">
+          <h3 class="menu-name">Pisang Goreng</h3>
+          <p class="menu-desc">Crispy dengan berbagai topping lezat</p>
+        </div>
+      </div>
+      
+      <!-- Card 2: Roti Bakar -->
+      <div class="menu-card" data-menu="roti-bakar">
+        <div class="menu-card-bg">
+          <img src="bg_menu_kayu_rb.png" alt="Latar Meja Munchies" class="menu-bg-img">
+          <div class="menu-bg-vignette"></div>
+          <div class="glare-3d-layer"></div>
+        </div>
+        <div class="menu-plate-shadow"></div>
+        <img src="rb_choco.png" alt="Roti Bakar" class="menu-food-pop">
+        <div class="menu-overlay">
+          <h3 class="menu-name">Roti Bakar</h3>
+          <p class="menu-desc">Roti lembut dengan isian melimpah</p>
+        </div>
+      </div>
+      
+      <!-- Card 3: Pancong Lumer -->
+      <div class="menu-card" data-menu="pancong-lumer">
+        <div class="menu-card-bg">
+          <img src="bg_menu_kayu.png" alt="Latar Meja Munchies" class="menu-bg-img">
+          <div class="menu-bg-vignette"></div>
+          <div class="glare-3d-layer"></div>
+        </div>
+        <div class="menu-plate-shadow"></div>
+        <img src="pl_choco.png" alt="Pancong Lumer" class="menu-food-pop">
+        <div class="menu-overlay">
+          <h3 class="menu-name">Pancong Lumer</h3>
+          <p class="menu-desc">Kue tradisional dengan sentuhan modern</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================
+       MODAL POPUP 3D - MULTI-LAYER FLOATING STAGE
+       ================================ -->
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <!-- Tombol Tutup (SVG Center) -->
+      <button class="modal-close" aria-label="Tutup popup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Tombol Panah Kiri & Kanan (SVG 100% Center) -->
+      <button class="modal-side-btn prev" aria-label="Varian sebelumnya">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button class="modal-side-btn next" aria-label="Varian selanjutnya">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+      
+      <!-- Panggung 3D Sebelah Kiri -->
+      <div class="modal-image-col">
+        <div class="modal-stage-box">
+          <img src="bg_menu_kayu.png" alt="Meja Kayu Munchies" class="modal-stage-bg">
+          <div class="modal-stage-glow"></div>
+          <div class="modal-plate-shadow"></div>
+          <div class="modal-floating-wrapper">
+            <img src="pg_original.png" alt="Menu Variant" class="modal-image">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sebelah Kanan: Judul Berwarna, Deskripsi, & Pil Varian 3D -->
+      <div class="modal-body">
+        <h2 class="modal-title">Pisang Goreng</h2>
+        <p class="modal-description">Deskripsi menu akan muncul di sini.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================
+       FOOTER / ABOUT US
+       ================================ -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="Logo.png" alt="Munchies Logo">
+        </div>
+        <div class="footer-contact-group">
+          <a href="mailto:munchies.blossom@gmail.com" class="footer-email">
+            <img src="Logo Gmail.png" alt="Gmail">
+            <span>munchies.blossom@gmail.com</span>
+          </a>
+        </div>
+      </div>
+      
+      <div class="footer-social-group">
+        <p class="footer-address">Jl. Raya Centex Gg Sampe RT 08/RW 06 13740</p>
+        <div class="footer-social-row">
+          <a href="https://www.instagram.com/munchies.blossom?utm_source=qr" target="_blank" class="social-item">
+            <img src="Logo Instagram.png" alt="Instagram">
+            <span>@munchies.blossom</span>
+          </a>
+          <a href="https://www.tiktok.com/@munchies.dessert?_r=1&_t=ZS-9AjawwEMdfO" target="_blank" class="social-item">
+            <img src="Logo tiktok.png" alt="TikTok">
+            <span>@munchies.dessert</span>
+          </a>
+        </div>
+        <a href="https://wa.me/628881614369" target="_blank" class="social-item">
+          <img src="Logo Whatsapp.png" alt="WhatsApp">
+          <span>08881614369</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

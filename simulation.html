@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Simulasi 3D Franchise - Munchies</title>
+  <link rel="icon" type="image/png" href="Logo.png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ==========================================================================
+       DESAIN KONSISTEN DENGAN FONT ALEGREYA & PALET WARNA ASLI MUNCHIES
+       ========================================================================== */
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #F8F2E6;
+      color: #503418;
+      font-family: 'Alegreya', serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    /* Sensor Navbar Atas (Hanya di Tengah & Kanan, Tidak Mengganggu Kiri Atas) */
+    .top-hover-sensor {
+      position: fixed;
+      top: 0;
+      left: 350px;
+      right: 0;
+      height: 18px;
+      z-index: 1001;
+      background: transparent;
+    }
+
+    .navbar-pull-hint {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #FED57D;
+      color: #503418;
+      border: 2px solid #503418;
+      border-top: none;
+      padding: 3px 20px 5px;
+      border-radius: 0 0 14px 14px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      z-index: 1000;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(80, 52, 24, 0.18);
+      transition: opacity 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .navbar.sim-autohide-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1002;
+      transform: translateY(-110%);
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 6px 24px rgba(80, 52, 24, 0.25);
+    }
+
+    .navbar.sim-autohide-navbar.visible {
+      transform: translateY(0);
+    }
+
+    /* Tombol Pembuka & Bilah Navigasi Kiri */
+    .hamburger-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 950;
+      background-color: #FED57D;
+      color: #503418;
+      border: 2.5px solid #503418;
+      border-radius: 14px;
+      padding: 9px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.98rem;
+      box-shadow: 0 6px 16px rgba(80, 52, 24, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .hamburger-btn:hover {
+      background-color: #503418;
+      color: #F8F2E6;
+    }
+
+    .hamburger-icon {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 18px;
+    }
+
+    .hamburger-icon span {
+      display: block;
+      height: 2.5px;
+      width: 100%;
+      background-color: currentColor;
+      border-radius: 2px;
+    }
+
+    .left-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 310px;
+      max-width: 84vw;
+      height: 100vh;
+      background-color: #F8F2E6;
+      border-right: 3.5px solid #503418;
+      z-index: 980;
+      padding: 0 0 24px 0;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      transform: translateX(-105%);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 10px 0 30px rgba(80, 52, 24, 0.22);
+    }
+
+    .left-sidebar.open {
+      transform: translateX(0);
+    }
+
+    .sidebar-header {
+      background-color: #FED57D;
+      border-bottom: 3px solid #503418;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .sidebar-header img {
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .sidebar-close-btn {
+      background-color: #503418;
+      color: #F8F2E6;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: 0.2s;
+    }
+
+    .sidebar-close-btn:hover {
+      background-color: #FC8F81;
+      color: #503418;
+    }
+
+    .sidebar-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-section {
+      background-color: #FFFFFF;
+      border: 2px solid #AA7641;
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      box-shadow: 0 3px 10px rgba(80, 52, 24, 0.06);
+    }
+
+    .sidebar-section.gabungan-box {
+      margin-top: 4px;
+      background-color: #F9EEDD;
+      border: 2.5px solid #503418;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.9rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #503418;
+      border-bottom: 2px solid rgba(170, 118, 65, 0.25);
+      padding-bottom: 4px;
+      margin-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tier-badge {
+      font-size: 0.74rem;
+      padding: 1px 8px;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .tier-badge.reguler {
+      background-color: #FC8F81;
+      color: #503418;
+    }
+
+    .tier-badge.premium {
+      background-color: #503418;
+      color: #FED57D;
+    }
+
+    .side-btn {
+      width: 100%;
+      background-color: #F8F2E6;
+      color: #503418;
+      border: 2px solid #AA7641;
+      padding: 8px 12px;
+      border-radius: 11px;
+      font-weight: 800;
+      font-size: 0.96rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.18s ease;
+    }
+
+    .side-btn:hover {
+      background-color: #FED57D;
+      border-color: #503418;
+    }
+
+    .side-btn.active {
+      background-color: #503418;
+      color: #FED57D;
+      border-color: #503418;
+    }
+
+    .trike-sub-switch {
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 4px 2px 2px;
+    }
+
+    .trike-sub-switch.visible {
+      display: grid;
+    }
+
+    .trike-variant-btn {
+      background-color: #FFFFFF;
+      color: #503418;
+      border: 1.5px solid #AA7641;
+      padding: 5px 6px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.15s;
+    }
+
+    .trike-variant-btn.active {
+      background-color: #FC8F81;
+      color: #503418;
+      border-color: #503418;
+    }
+
+    .teleport-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .teleport-btn {
+      background-color: #F8F2E6;
+      color: #503418;
+      border: 1.5px solid #AA7641;
+      padding: 7px 6px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.15s;
+    }
+
+    .teleport-btn:hover {
+      background-color: #FED57D;
+      border-color: #503418;
+    }
+
+    /* HUD Kanan Atas: Tombol Kontrol + Panel Ukuran & Fasilitas Mitra */
+    .top-right-wrapper {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 920;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      max-width: 385px;
+      width: calc(100vw - 32px);
+      pointer-events: none;
+    }
+
+    .top-right-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .outlet-status-pill {
+      background-color: #503418;
+      color: #FED57D;
+      border: 2px solid #AA7641;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      box-shadow: 0 4px 12px rgba(80, 52, 24, 0.18);
+    }
+
+    .quick-hud-btn {
+      background-color: #F8F2E6;
+      color: #503418;
+      border: 2px solid #503418;
+      padding: 6px 12px;
+      border-radius: 13px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(80, 52, 24, 0.15);
+      transition: 0.18s;
+    }
+
+    .quick-hud-btn:hover {
+      background-color: #FED57D;
+    }
+
+    .quick-hud-btn.active {
+      background-color: #FED57D;
+      color: #503418;
+      box-shadow: 0 0 0 2px #503418 inset;
+    }
+
+    .right-info-card {
+      pointer-events: auto;
+      width: 100%;
+      background-color: rgba(248, 242, 230, 0.97);
+      border: 2.5px solid #503418;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 26px rgba(80, 52, 24, 0.24);
+      display: none;
+      flex-direction: column;
+      max-height: 38vh;
+    }
+
+    .right-info-card.visible {
+      display: flex;
+    }
+
+    .right-card-header {
+      background-color: #FED57D;
+      color: #503418;
+      padding: 8px 14px;
+      border-bottom: 2px solid #503418;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+
+    .right-card-close {
+      background-color: #503418;
+      color: #F8F2E6;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .right-card-body {
+      padding: 10px 14px 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .spec-row-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px dashed rgba(80, 52, 24, 0.22);
+      padding-bottom: 4px;
+    }
+
+    .spec-row-item b {
+      color: #503418;
+      text-align: right;
+    }
+
+    .equip-badge-summary {
+      background-color: #503418;
+      color: #FED57D;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .equip-list-ul {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .equip-list-ul li {
+      position: relative;
+      padding-left: 16px;
+      line-height: 1.38;
+      font-weight: 600;
+      color: #2b1b0c;
+    }
+
+    .equip-list-ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #AA7641;
+      font-weight: 900;
+    }
+
+    #object-measure-hud {
+      background-color: #503418;
+      color: #FED57D;
+      border: 2px solid #FED57D;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      display: none;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    #dimension-labels-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 820;
+      overflow: hidden;
+      display: none;
+    }
+
+    .dim-floating-tag {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      background-color: rgba(254, 213, 125, 0.96);
+      color: #503418;
+      border: 2px solid #503418;
+      padding: 4px 11px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
+      pointer-events: none;
+    }
+
+    /* Viewport Kanvas 3D & Overlay */
+    #canvas-container {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+    }
+
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(248, 242, 230, 0.96);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 960;
+      transition: opacity 0.3s ease;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #FED57D;
+      border-top-color: #503418;
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+      margin-bottom: 14px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #loading-text {
+      color: #503418;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    #crosshair {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      transform: translate(-50%, -50%);
+      border: 2.5px solid #503418;
+      border-radius: 50%;
+      background-color: rgba(254, 213, 125, 0.9);
+      pointer-events: none;
+      display: none;
+      z-index: 850;
+    }
+
+    #grab-prompt {
+      position: fixed;
+      top: 56%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #FED57D;
+      color: #503418;
+      padding: 7px 18px;
+      border-radius: 25px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      border: 2.5px solid #503418;
+      pointer-events: none;
+      display: none;
+      z-index: 850;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+      white-space: nowrap;
+      max-width: 90vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .hud-bottom-bar {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(248, 242, 230, 0.96);
+      border: 2px solid #503418;
+      color: #503418;
+      padding: 7px 20px;
+      border-radius: 25px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      z-index: 850;
+      pointer-events: none;
+      text-align: center;
+      max-width: 66vw;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+
+    .hud-bottom-bar b { color: #AA7641; }
+
+    /* Kontrol Layar Sentuh / D-Pad */
+    .mobile-controls-wrapper {
+      position: fixed;
+      bottom: 16px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 900;
+      pointer-events: none;
+    }
+
+    .dpad-container {
+      display: grid;
+      grid-template-columns: repeat(3, 46px);
+      grid-template-rows: repeat(2, 46px);
+      gap: 5px;
+      pointer-events: auto;
+    }
+
+    .dpad-btn {
+      background-color: rgba(248, 242, 230, 0.94);
+      color: #503418;
+      border: 2.5px solid #503418;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(80, 52, 24, 0.2);
+    }
+
+    .dpad-btn:active, .dpad-btn.pressed {
+      background-color: #503418;
+      color: #FED57D;
+    }
+
+    .mobile-action-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .mob-action-btn {
+      background-color: #FED57D;
+      color: #503418;
+      border: 2.5px solid #503418;
+      padding: 8px 14px;
+      border-radius: 13px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(80, 52, 24, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .hud-bottom-bar { display: none; }
+      .outlet-status-pill { display: none; }
+      .top-hover-sensor { left: 160px; }
+
+      .navbar-pull-hint {
+        font-size: 0.76rem;
+        padding: 2px 12px 4px;
+      }
+
+      .hamburger-btn {
+        top: 12px;
+        left: 10px;
+        padding: 7px 12px;
+        font-size: 0.86rem;
+        border-radius: 11px;
+      }
+
+      .left-sidebar {
+        width: 275px;
+      }
+
+      .top-right-wrapper {
+        top: 12px;
+        right: 10px;
+        max-width: calc(100vw - 20px);
+        width: 310px;
+      }
+
+      .top-right-bar {
+        gap: 4px;
+      }
+
+      .quick-hud-btn {
+        padding: 5px 9px;
+        font-size: 0.78rem;
+        border-radius: 10px;
+      }
+
+      .right-info-card {
+        max-height: 44vh;
+      }
+
+      .right-card-header {
+        font-size: 0.88rem;
+        padding: 7px 12px;
+      }
+
+      .right-card-body {
+        font-size: 0.82rem;
+        padding: 8px 12px 10px;
+      }
+
+      .dpad-container {
+        grid-template-columns: repeat(3, 42px);
+        grid-template-rows: repeat(2, 42px);
+        gap: 4px;
+      }
+
+      .mob-action-btn {
+        padding: 7px 11px;
+        font-size: 0.8rem;
+      }
+
+      .dim-floating-tag {
+        font-size: 0.74rem;
+        padding: 3px 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hamburger-btn span {
+        display: none;
+      }
+      .hamburger-btn {
+        padding: 8px 10px;
+      }
+      .top-right-wrapper {
+        width: calc(100vw - 70px);
+      }
+    }
+  </style>
+
+  <!-- Three.js r128 Resmi via jsDelivr CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+</head>
+<body>
+
+  <!-- Sensor Hover Tepi Atas (Hanya Tengah & Kanan) -->
+  <div class="top-hover-sensor" id="top-hover-sensor"></div>
+  <div class="navbar-pull-hint" id="navbar-pull-hint">
+    Navigasi Menu Utama &#9662;
+  </div>
+
+  <!-- Navbar Utama -->
+  <nav class="navbar sim-autohide-navbar" id="main-navbar">
+    <div class="navbar-logo">
+      <a href="index.html">
+        <img src="Logo.png" alt="Munchies Logo">
+      </a>
+    </div>
+    <ul class="navbar-menu">
+      <li><a href="index.html" class="navbar-link">Home</a></li>
+      <li><a href="index.html#outlet" class="navbar-link">Outlet</a></li>
+      <li><a href="menu.html" class="navbar-link">Menu</a></li>  
+      <li><a href="franchise.html" class="navbar-link active">Franchise</a></li>
+    </ul>
+  </nav>
+
+  <!-- Tombol Pembuka Bilah Kiri -->
+  <button class="hamburger-btn" id="btn-open-sidebar" aria-label="Buka Menu Simulasi">
+    <div class="hamburger-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <span>Menu Simulasi</span>
+  </button>
+
+  <!-- Bilah Navigasi Kiri -->
+  <aside class="left-sidebar open" id="left-sidebar">
+    <div class="sidebar-header">
+      <img src="Logo.png" alt="Munchies Logo">
+      <button class="sidebar-close-btn" id="btn-close-sidebar" title="Tutup Menu">&times;</button>
+    </div>
+
+    <div class="sidebar-body">
+      <!-- KATEGORI 1: PAKET REGULER (3 OUTLET) -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">
+          <span>Paket Reguler</span>
+          <span class="tier-badge reguler">Standar</span>
+        </div>
+        <button class="side-btn outlet-btn active" data-type="booth_portable" data-label="Reguler 1: Booth Portabel">
+          <span>1. Booth Portabel</span>
+        </button>
+        <button class="side-btn outlet-btn" data-type="gerobak" data-label="Reguler 2: Gerobak Dagang">
+          <span>2. Gerobak Dagang</span>
+        </button>
+        <button class="side-btn outlet-btn" id="btn-main-trike" data-type="trike_terbuka" data-label="Reguler 3: Sepeda Listrik Kargo">
+          <span>3. Sepeda Listrik Kargo</span>
+        </button>
+        <div class="trike-sub-switch" id="trike-sub-switch">
+          <button class="trike-variant-btn active" data-trike="trike_terbuka">Mode Jualan (Terbuka)</button>
+          <button class="trike-variant-btn" data-trike="trike_tertutup">Mode Jalan (Tertutup)</button>
+        </div>
+      </div>
+
+      <!-- KATEGORI 2: PAKET PREMIUM (3 OUTLET) -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">
+          <span>Paket Premium</span>
+          <span class="tier-badge premium">Eksklusif</span>
+        </div>
+        <button class="side-btn outlet-btn" data-type="kontainer" data-label="Premium 1: Booth Kontainer">
+          <span>1. Booth Kontainer</span>
+        </button>
+        <button class="side-btn outlet-btn" data-type="ruko" data-label="Premium 2: Ruko Takeaway">
+          <span>2. Ruko Takeaway</span>
+        </button>
+        <button class="side-btn outlet-btn" data-type="restoran" data-label="Premium 3: Restoran 2 Lantai">
+          <span>3. Restoran 2 Lantai</span>
+        </button>
+      </div>
+
+      <!-- KATEGORI 3: KOMPLEKS GABUNGAN -->
+      <div class="sidebar-section gabungan-box">
+        <div class="sidebar-section-title">
+          <span>Simulasi Kawasan Kota</span>
+        </div>
+        <button class="side-btn outlet-btn" data-type="gabungan" data-label="Kompleks Gabungan (Semua Outlet)">
+          <span>Kompleks Gabungan Kota</span>
+        </button>
+      </div>
+
+      <!-- KATEGORI 4: PINTASAN TELEPORT 6 TITIK OUTLET (HANYA MUNCUL DI MODE GABUNGAN) -->
+      <div class="sidebar-section" id="sidebar-teleport-section" style="display: none;">
+        <div class="sidebar-section-title">
+          <span>Pintasan Posisi (6 Outlet)</span>
+        </div>
+        <div class="teleport-grid">
+          <button class="teleport-btn" data-tp="booth_portable">1. Booth Portabel</button>
+          <button class="teleport-btn" data-tp="gerobak">2. Gerobak Dagang</button>
+          <button class="teleport-btn" data-tp="sepeda_listrik">3. Sepeda Listrik</button>
+          <button class="teleport-btn" data-tp="kontainer">4. Booth Kontainer</button>
+          <button class="teleport-btn" data-tp="ruko">5. Ruko Takeaway</button>
+          <button class="teleport-btn" data-tp="restoran">6. Restoran 2 Lantai</button>
+        </div>
+      </div>
+
+      <!-- KATEGORI 5: MODE PANDANGAN KAMERA -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">
+          <span>Mode Pandangan Kamera</span>
+        </div>
+        <button class="side-btn mode-btn active" id="btn-mode-orbit">
+          <span>Pandangan Orbit (Putar)</span>
+        </button>
+        <button class="side-btn mode-btn" id="btn-mode-fps">
+          <span>Mode Jelajah (Jalan Kaki)</span>
+        </button>
+        <button class="side-btn" id="btn-reset-center">
+          <span>Tengahkan Kamera (Center)</span>
+        </button>
+      </div>
+
+      <!-- KATEGORI 6: LAYAR PENUH & KEMBALI -->
+      <div class="sidebar-section">
+        <button class="side-btn" id="btn-sidebar-fullscreen">
+          <span>Mode Layar Penuh</span>
+        </button>
+        <a href="franchise.html" class="side-btn">
+          <span>&larr; Kembali ke Franchise</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- HUD Kanan Atas (Ukuran 3D & Detail Mitra Default OFF agar Layar Bersih!) -->
+  <div class="top-right-wrapper">
+    <div class="top-right-bar">
+      <div class="outlet-status-pill" id="active-outlet-pill">Reguler 1: Booth Portabel</div>
+      <button class="quick-hud-btn" id="btn-quick-dim" title="Tampilkan/Sembunyikan Penggaris Ukuran 3D">Ukuran 3D: OFF</button>
+      <button class="quick-hud-btn" id="btn-quick-equip" title="Tampilkan/Sembunyikan Daftar Fasilitas Mitra">Detail Mitra: OFF</button>
+      <button class="quick-hud-btn" id="btn-quick-center" title="Seimbangkan Kamera ke Tengah">Center</button>
+      <button class="quick-hud-btn" id="btn-quick-fullscreen">Layar Penuh</button>
+    </div>
+
+    <div id="object-measure-hud">Ukuran Objek: -</div>
+
+    <!-- Panel 1 Kanan Atas: Spesifikasi Ukuran & Dimensi (Default OFF) -->
+    <div class="right-info-card" id="top-right-dim-card">
+      <div class="right-card-header">
+        <span id="dim-card-title">Spesifikasi Ukuran &amp; Dimensi</span>
+        <button class="right-card-close" id="btn-close-dim-card" title="Sembunyikan Ukuran">&times;</button>
+      </div>
+      <div class="right-card-body" id="dim-spec-panel"></div>
+    </div>
+
+    <!-- Panel 2 Kanan Atas: Kelengkapan & Fasilitas Mitra (Default OFF) -->
+    <div class="right-info-card" id="top-right-equip-card">
+      <div class="right-card-header">
+        <span id="equip-card-title">Kelengkapan &amp; Fasilitas Mitra</span>
+        <button class="right-card-close" id="btn-close-equip-card" title="Sembunyikan Detail Mitra">&times;</button>
+      </div>
+      <div class="right-card-body" id="equip-spec-panel"></div>
+    </div>
+  </div>
+
+  <!-- Container Label Penggaris Ukuran 3D Melayang -->
+  <div id="dimension-labels-container"></div>
+
+  <!-- Layar Loading -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <div id="loading-text">Memuat Model 3D Munchies...</div>
+  </div>
+
+  <!-- Crosshair & Prompt Interaksi -->
+  <div id="crosshair"></div>
+  <div id="grab-prompt">Klik Kiri / [E] Ambil</div>
+
+  <!-- Panduan Bawah (Desktop) -->
+  <div class="hud-bottom-bar" id="hud-help">
+    <b>Pandangan Orbit:</b> Klik Kiri + Geser = Putar Kamera | Scroll = Zoom | Klik Kanan = Geser | <b>Klik Makanan/Alat</b> = Ambil
+  </div>
+
+  <!-- Kontrol D-Pad & Aksi -->
+  <div class="mobile-controls-wrapper">
+    <div class="dpad-container" id="dpad-container">
+      <div></div>
+      <button class="dpad-btn" id="btn-move-forward" aria-label="Maju">&#9650;</button>
+      <div></div>
+      <button class="dpad-btn" id="btn-move-left" aria-label="Kiri">&#9664;</button>
+      <button class="dpad-btn" id="btn-move-backward" aria-label="Mundur">&#9660;</button>
+      <button class="dpad-btn" id="btn-move-right" aria-label="Kanan">&#9654;</button>
+    </div>
+
+    <div class="mobile-action-group">
+      <button class="mob-action-btn" id="btn-mob-grab">Ambil / Taruh</button>
+      <button class="mob-action-btn" id="btn-mob-toggle-mode">Mode Jelajah</button>
+    </div>
+  </div>
+
+  <!-- Kanvas 3D Fullscreen -->
+  <div id="canvas-container"></div>
+
+  <script src="simulation.js"></script>
+</body>
+</html>

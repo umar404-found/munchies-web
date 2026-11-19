@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Franchise - Munchies</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ================================================================
+       SATU TOMBOL SIMULASI 3D DI TENGAH BAWAH (DI LUAR KEDUA KOTAK KARTU)
+       ================================================================ */
+    .franchise-sim-cta-outside {
+      max-width: 1240px;
+      margin: 48px auto 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-simulasi-tunggal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 46px;
+      background-color: var(--bg-nav);
+      color: #503418;
+      font-family: 'Alegreya', serif;
+      font-weight: 900;
+      font-size: 1.45rem;
+      letter-spacing: 0.4px;
+      border-radius: 40px;
+      border: 3px solid #503418;
+      box-shadow: 0 8px 24px rgba(80, 52, 24, 0.22);
+      transition: all 0.25s ease;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .btn-simulasi-tunggal:hover {
+      background-color: #503418;
+      color: #F8F2E6;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(80, 52, 24, 0.35);
+    }
+
+    @media (max-width: 768px) {
+      .franchise-section {
+        padding: 100px 16px 50px !important;
+      }
+      .franchise-grid {
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+      }
+      .franchise-sim-cta-outside {
+        margin-top: 34px;
+      }
+      .btn-simulasi-tunggal {
+        width: 100%;
+        max-width: 340px;
+        font-size: 1.25rem;
+        padding: 14px 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ================================
+       NAVBAR - FIXED TOP
+       ================================ -->
+  <nav class="navbar">
+    <div class="navbar-logo">
+      <a href="index.html">
+        <img src="Logo.png" alt="Munchies Logo">
+      </a>
+    </div>
+    <ul class="navbar-menu">
+      <li><a href="index.html" class="navbar-link">Home</a></li>
+      <li><a href="index.html#outlet" class="navbar-link">Outlet</a></li>
+      <li><a href="menu.html" class="navbar-link">Menu</a></li>
+      <li><a href="franchise.html" class="navbar-link active">Franchise</a></li>
+    </ul>
+  </nav>
+
+  <!-- ================================
+       FRANCHISE SECTION (2 KARTU BERSIH + 1 TOMBOL DI LUAR BAWAH)
+       ================================ -->
+  <main class="franchise-section">
+    <div class="franchise-grid">
+      <!-- Franchise Card 1: Standar -->
+      <div class="franchise-card standar">
+        <img src="Franchise Standart.jpg" alt="Franchise Munchies Standar" class="franchise-image">
+        <div class="franchise-header">
+          <h3>Standar</h3>
+        </div>
+        <div class="franchise-price">Rp 4.999.999</div>
+        <div class="franchise-arrow-wrapper">
+          <button class="franchise-arrow-btn" aria-label="Buka detail paket Standar">&#9660;</button>
+        </div>
+        <div class="franchise-details">
+          <ul>
+            <li>Booth portable (aluminium/kayu) atau sepeda listrik kargo.</li>
+            <li>Peralatan masak standar.</li>
+            <li>Perlengkapan saji dan topping.</li>
+            <li>Banner dan daftar menu.</li>
+            <li>Bahan baku awal (100 porsi).</li>
+            <li>100 pcs packaging berlogo.</li>
+            <li>1 kaos seragam dan 1 apron.</li>
+            <li>Tanpa bagi hasil, wajib membeli bahan baku dari pusat.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Franchise Card 2: Premium -->
+      <div class="franchise-card premium">
+        <img src="Franchise Premium.jpg" alt="Franchise Munchies Premium" class="franchise-image">
+        <div class="franchise-header">
+          <h3>Premium</h3>
+        </div>
+        <div class="franchise-price">Rp 12.499.999</div>
+        <div class="franchise-arrow-wrapper">
+          <button class="franchise-arrow-btn" aria-label="Buka detail paket Premium">&#9660;</button>
+        </div>
+        <div class="franchise-details">
+          <ul>
+            <li>Pilihan tempat usaha (booth container, ruko takeaway, atau restoran 2 lantai).</li>
+            <li>Peralatan masak lengkap dan freezer.</li>
+            <li>Paket kasir digital (tablet, printer, dan laci uang).</li>
+            <li>Neon box, banner, dan buku menu.</li>
+            <li>Bahan baku awal (350 porsi).</li>
+            <li>400 pcs packaging full printing.</li>
+            <li>3 set seragam lengkap.</li>
+            <li>Pelatihan karyawan langsung dari tim pusat (3 hari)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SATU TOMBOL SIMULASI 3D DI TENGAH BAWAH (DI LUAR BORDER KARTU) -->
+    <div class="franchise-sim-cta-outside">
+      <a href="simulation.html" class="btn-simulasi-tunggal">
+        Simulasikan Outlet 3D
+      </a>
+    </div>
+  </main>
+
+  <!-- ================================
+       FOOTER / ABOUT US
+       ================================ -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="Logo.png" alt="Munchies Logo">
+        </div>
+        <div class="footer-contact-group">
+          <a href="mailto:munchies.blossom@gmail.com" class="footer-email">
+            <img src="Logo Gmail.png" alt="Gmail">
+            <span>munchies.blossom@gmail.com</span>
+          </a>
+        </div>
+      </div>
+      
+      <div class="footer-social-group">
+        <p class="footer-address">Jl. Raya Centex Gg Sampe RT 08/RW 06 13740</p>
+        <div class="footer-social-row">
+          <a href="https://www.instagram.com/munchies.blossom?utm_source=qr" target="_blank" class="social-item">
+            <img src="Logo Instagram.png" alt="Instagram">
+            <span>@munchies.blossom</span>
+          </a>
+          <a href="https://www.tiktok.com/@munchies.dessert?_r=1&_t=ZS-9AjawwEMdfO" target="_blank" class="social-item">
+            <img src="Logo tiktok.png" alt="TikTok">
+            <span>@munchies.dessert</span>
+          </a>
+        </div>
+        <a href="https://wa.me/628881614369" target="_blank" class="social-item">
+          <img src="Logo Whatsapp.png" alt="WhatsApp">
+          <span>08881614369</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
