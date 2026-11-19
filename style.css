@@ -1,0 +1,1658 @@
+/* ==========================================================================
+   MUNCHIES - GLOBAL STYLESHEET (3D PAGE TRANSITIONS & CENTERED SVG ARROWS)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600;700;800;900&display=swap');
+
+@view-transition {
+  navigation: auto;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Warna Utama Sesuai Mockup */
+  --bg-main: #F8F2E6;
+  --bg-nav: #FED57D;
+  --bg-footer: #FED57D;
+  --text-main: #000000;
+  --text-white: #FFFFFF;
+  --hover-arrow: #503418;
+  --overlay-dark: rgba(0, 0, 0, 0.72);
+  --flavor-glow: rgba(170, 118, 65, 0.45);
+
+  /* Warna Pop-up Pisang Goreng */
+  --pg-original: #AA7641;
+  --pg-coklat: #B43300;
+  --pg-regal: #D79577;
+  --pg-chocomaltine: #683B0D;
+  --pg-cheese: #FFC080;
+
+  /* Warna Pop-up Roti Bakar */
+  --rb-roti: #AA7641;
+  --rb-choco-crunchy: #52361A;
+  --rb-srikaya: #F8922B;
+  --rb-keju: #FFC080;
+
+  /* Warna Pop-up Pancong Lumer */
+  --pl-pancong: #AA7641;
+  --pl-choco-crunchy: #52361A;
+  --pl-tiramisu: #D7A66B;
+  --pl-coklat: #B43300;
+  --pl-keju: #FFC080;
+
+  /* Warna Franchise */
+  --fs-bg-standar: #FC8F81;
+  --fs-text-standar: #503418;
+  --fs-arrow-standar: #000000;
+  --fs-bg-premium: #503418;
+  --fs-text-premium: #FFFFFF;
+  --fs-arrow-premium: #FFFFFF;
+
+  /* Transisi */
+  --transition-fast: 0.25s ease;
+  --transition-medium: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-main);
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Alegreya', serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+  max-width: 100%;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   ANIMASI 3D SAAT GANTI HALAMAN (3D PERSPECTIVE PAGE TRANSITION)
+   ========================================================================== */
+.page-3d-stage {
+  transform-origin: center 220px;
+  animation: pageEnter3D 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+body.is-leaving-3d .page-3d-stage {
+  animation: pageExit3D 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes pageEnter3D {
+  0% {
+    opacity: 0;
+    transform: perspective(1500px) rotateX(6deg) translateY(24px) scale(0.975);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1500px) rotateX(0deg) translateY(0) scale(1);
+  }
+}
+
+@keyframes pageExit3D {
+  0% {
+    opacity: 1;
+    transform: perspective(1500px) rotateX(0deg) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: perspective(1500px) rotateX(-5deg) translateY(-18px) scale(0.965);
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ==========================================================================
+   EFEK KILAU CAHAYA 3D DINAMIS (3D SPOTLIGHT GLARE LAYER)
+   ========================================================================== */
+.glare-3d-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle 360px at var(--gx, 50%) var(--gy, 50%),
+    rgba(255, 255, 255, 0.38),
+    rgba(254, 213, 125, 0.12) 45%,
+    transparent 75%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  mix-blend-mode: overlay;
+}
+
+.has-3d-tilt:hover .glare-3d-layer {
+  opacity: 1;
+}
+
+/* Animasi Scroll-Reveal 3D Saat Halaman Digulir */
+.reveal-3d-item {
+  opacity: 0;
+  transform: perspective(1100px) rotateX(16deg) translateY(48px) scale(0.96);
+  transform-origin: center bottom;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-3d-item.revealed-3d {
+  opacity: 1;
+  transform: perspective(1100px) rotateX(0deg) translateY(0) scale(1);
+}
+
+/* ==========================================================================
+   NAVBAR - FIXED TOP
+   ========================================================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background-color: var(--bg-nav);
+  z-index: 1000;
+  padding: 0 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 18px rgba(80, 52, 24, 0.14);
+  overflow: visible;
+}
+
+.navbar-logo {
+  position: relative;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  margin-left: 25px;
+  perspective: 600px;
+  flex-shrink: 0;
+}
+
+.navbar-logo a {
+  display: flex;
+  align-items: center;
+  height: 80px;
+}
+
+.navbar-logo img {
+  height: 125px;
+  width: auto;
+  display: block;
+  position: relative;
+  top: 0;
+  transform: rotate(-3.5deg) translateZ(0);
+  transform-origin: left center;
+  filter: drop-shadow(0 6px 10px rgba(80, 52, 24, 0.22));
+  z-index: 1001;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+}
+
+.navbar-logo img:hover {
+  transform: rotate(-2deg) scale(1.06) translateY(-2px);
+  filter: drop-shadow(0 10px 16px rgba(80, 52, 24, 0.3));
+}
+
+.navbar-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
+  max-width: 720px;
+}
+
+.navbar-link {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-main);
+  padding: 6px 10px;
+  position: relative;
+  letter-spacing: 0.5px;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  white-space: nowrap;
+}
+
+.navbar-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 3.5px;
+  background-color: var(--text-white);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform var(--transition-fast);
+}
+
+.navbar-link:hover,
+.navbar-link.active {
+  color: var(--text-white);
+  transform: translateY(-1px);
+}
+
+.navbar-link:hover::after,
+.navbar-link.active::after {
+  transform: scaleX(1);
+}
+
+/* ==========================================================================
+   HERO SLIDER - HOME PAGE (SEAMLESS INFINITE LOOP & SVG CENTER ARROWS)
+   ========================================================================== */
+.hero-section {
+  margin-top: 110px;
+  padding: 25px 60px 40px;
+  position: relative;
+  perspective: 1500px;
+}
+
+.hero-slider-wrapper {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  border-radius: 28px;
+  overflow: hidden;
+  background-color: #decbb1;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  box-shadow:
+    0 18px 42px rgba(80, 52, 24, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+.hero-slider-wrapper:hover {
+  box-shadow:
+    0 28px 60px rgba(80, 52, 24, 0.26),
+    0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.hero-slider {
+  display: flex;
+  width: 100%;
+  will-change: transform;
+}
+
+.hero-slide {
+  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: #decbb1;
+}
+
+.hero-slide img {
+  width: 100%;
+  height: 64vh;
+  min-height: 460px;
+  max-height: 680px;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  transform: scale(1.08) translate3d(var(--px, 0px), var(--py, 0px), 0);
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), filter 0.65s ease;
+}
+
+.hero-slide.is-active-slide img {
+  transform: scale(1.05) translate3d(var(--px, 0px), var(--py, 0px), 0);
+}
+
+/* Tombol Panah Navigasi Slider 100% RATA TENGAH (SVG) */
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateZ(40px);
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border-radius: 50%;
+  background-color: rgba(248, 242, 230, 0.72);
+  border: 2px solid rgba(80, 52, 24, 0.55);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #503418;
+  z-index: 12;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.slider-arrow svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.slider-arrow:hover {
+  background-color: var(--hover-arrow);
+  border-color: var(--hover-arrow);
+  color: var(--text-white);
+  transform: translateY(-50%) translateZ(50px) scale(1.1);
+  box-shadow: 0 10px 24px rgba(80, 52, 24, 0.38);
+}
+
+.slider-arrow:active {
+  transform: translateY(-50%) translateZ(40px) scale(0.95);
+}
+
+.slider-arrow.prev { left: 24px; }
+.slider-arrow.next { right: 24px; }
+
+/* Indikator Pill Minimalis di Bawah Tengah Hero Slider */
+.hero-pagination-pills {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%) translateZ(35px);
+  display: flex;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: rgba(40, 22, 6, 0.38);
+  backdrop-filter: blur(6px);
+  z-index: 12;
+}
+
+.hero-pill-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.55);
+  transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.hero-pill-dot.active {
+  width: 28px;
+  background-color: #FED57D;
+  box-shadow: 0 0 10px rgba(254, 213, 125, 0.7);
+}
+
+/* ==========================================================================
+   OUTLET SECTION - VERTICAL LAYOUT
+   ========================================================================== */
+.outlet-section {
+  width: 100%;
+  padding: 20px 60px 70px;
+  max-width: 1240px;
+  margin: 0 auto;
+  scroll-margin-top: 100px;
+  perspective: 1400px;
+}
+
+.outlet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.outlet-item {
+  position: relative;
+  display: flex;
+  gap: 32px;
+  background: var(--text-white);
+  border-radius: 22px;
+  overflow: hidden;
+  align-items: center;
+  transform-style: preserve-3d;
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  box-shadow: 0 8px 24px rgba(80, 52, 24, 0.08);
+  border: 1px solid rgba(170, 118, 65, 0.14);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+  will-change: transform;
+}
+
+.outlet-item:hover {
+  box-shadow: 0 20px 44px rgba(80, 52, 24, 0.18);
+  border-color: rgba(170, 118, 65, 0.38);
+}
+
+.outlet-image {
+  width: 360px;
+  height: 230px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 22px 0 0 22px;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
+}
+
+.outlet-item:hover .outlet-image {
+  transform: scale(1.04) translateX(4px);
+  filter: contrast(1.04) saturate(1.06);
+}
+
+.outlet-info {
+  padding: 24px 30px;
+  transform: translateZ(24px);
+  transition: transform 0.35s ease;
+}
+
+.outlet-name {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.outlet-address {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #444;
+}
+
+/* ==========================================================================
+   MENU PAGE - 3 LAYER OUT-OF-BOUNDS 3D POP-OUT CARDS (CLEAN TANPA BADGE)
+   ========================================================================== */
+.menu-section {
+  width: 100%;
+  padding: 150px 60px 50px;
+  max-width: 1240px;
+  margin: 0 auto;
+  perspective: 1500px;
+}
+
+.menu-title {
+  text-align: center;
+  font-size: 2.85rem;
+  font-weight: 800;
+  margin-bottom: 64px;
+  text-shadow: 0 3px 10px rgba(80, 52, 24, 0.08);
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 46px;
+}
+
+.menu-card {
+  position: relative;
+  border-radius: 26px;
+  overflow: visible;
+  cursor: pointer;
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+  transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
+  transition: transform 0.18s ease-out;
+  will-change: transform;
+}
+
+.menu-3d-badge {
+  display: none !important;
+}
+
+/* Lapis 1: Bingkai Latar Meja Kayu (bg_menu_kayu.png) */
+.menu-card-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  overflow: hidden;
+  transform: translateZ(0px);
+  border: 2.5px solid rgba(170, 118, 65, 0.28);
+  box-shadow:
+    0 16px 34px rgba(80, 52, 24, 0.16),
+    0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.menu-card:hover .menu-card-bg {
+  border-color: #FED57D;
+  box-shadow:
+    0 30px 60px rgba(80, 52, 24, 0.32),
+    0 0 32px rgba(254, 213, 125, 0.42);
+}
+
+.menu-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.08) translate3d(calc(var(--px, 0px) * -0.45), calc(var(--py, 0px) * -0.45), 0);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
+}
+
+.menu-card:hover .menu-bg-img {
+  transform: scale(1.12) translate3d(calc(var(--px, 0px) * -0.6), calc(var(--py, 0px) * -0.6), 0);
+  filter: brightness(0.92) contrast(1.06);
+}
+
+.menu-bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 42%, transparent 35%, rgba(35, 18, 4, 0.35) 100%);
+  pointer-events: none;
+}
+
+/* Lapis 2: Bayangan Piring 3D di Atas Meja */
+.menu-plate-shadow {
+  position: absolute;
+  inset: 16% 14% 22% 14%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(25, 12, 2, 0.65) 0%, rgba(25, 12, 2, 0.25) 52%, transparent 74%);
+  transform: translateZ(10px) translateY(10px) scale(0.86);
+  filter: blur(10px);
+  pointer-events: none;
+  z-index: 3;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.45s ease, filter 0.45s ease;
+}
+
+.menu-card:hover .menu-plate-shadow {
+  transform: translateZ(12px) translate3d(calc(var(--px, 0px) * -0.9), 26px, 0) scale(1.06);
+  filter: blur(16px);
+  opacity: 0.82;
+}
+
+/* Lapis 3: Cutout Makanan .PNG (Melayang Maju & Timbul Keluar Kartu!) */
+.menu-food-pop {
+  position: absolute;
+  top: 2%;
+  left: 5%;
+  width: 90%;
+  height: 82%;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 6;
+  transform: translateZ(38px) scale(0.96);
+  filter: drop-shadow(0 14px 18px rgba(40, 20, 4, 0.45));
+  transition:
+    transform 0.52s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 0.45s ease;
+  will-change: transform, filter;
+}
+
+.menu-card:hover .menu-food-pop {
+  transform:
+    translateZ(92px)
+    translate3d(calc(var(--px, 0px) * 1.15), calc(var(--py, 0px) * 1.15 - 22px), 0)
+    scale(1.20)
+    rotateZ(-2.5deg);
+  filter:
+    drop-shadow(0 28px 26px rgba(30, 15, 3, 0.55))
+    drop-shadow(0 0 18px rgba(254, 213, 125, 0.32));
+}
+
+/* Teks Judul & Deskripsi Menu Melayang di Lapisan Depan Bawah */
+.menu-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0 0 26px 26px;
+  background: linear-gradient(transparent, rgba(20, 10, 2, 0.88) 68%);
+  padding: 52px 24px 22px;
+  color: var(--text-white);
+  transform: translateZ(56px);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 7;
+  pointer-events: none;
+}
+
+.menu-card:hover .menu-overlay {
+  transform: translateZ(72px) translateY(4px);
+}
+
+.menu-name {
+  font-size: 1.72rem;
+  font-weight: 900;
+  margin-bottom: 3px;
+  text-shadow: 0 4px 14px rgba(0, 0, 0, 0.75);
+}
+
+.menu-desc {
+  font-size: 1.05rem;
+  opacity: 0.96;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+}
+
+/* ==========================================================================
+   MODAL POPUP 3D - MULTI-LAYER FLOATING STAGE & 100% CENTERED SVG ARROWS
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--overlay-dark);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  perspective: 1600px;
+  transition: opacity 0.32s ease;
+}
+
+.modal-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.modal-content {
+  background:
+    radial-gradient(circle 460px at 27% 50%, var(--flavor-glow), transparent 74%),
+    var(--bg-main);
+  border-radius: 28px;
+  width: 880px;
+  height: 440px;
+  max-width: 880px;
+  position: relative;
+  box-shadow:
+    0 35px 90px rgba(0, 0, 0, 0.52),
+    0 0 50px var(--flavor-glow),
+    0 0 0 2.5px rgba(80, 52, 24, 0.22);
+  display: flex;
+  align-items: center;
+  overflow: visible;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--mBoxRX, 0deg)) rotateY(var(--mBoxRY, 0deg));
+  transition:
+    box-shadow 0.45s ease,
+    background 0.45s ease;
+  will-change: transform;
+}
+
+.modal-overlay.active .modal-content {
+  animation: modalPopIn3D 0.48s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes modalPopIn3D {
+  0% {
+    opacity: 0;
+    transform: rotateX(18deg) rotateY(-8deg) scale(0.78) translateY(36px);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(var(--mBoxRX, 0deg)) rotateY(var(--mBoxRY, 0deg)) scale(1) translateY(0);
+  }
+}
+
+/* Tombol Silang Tutup (100% Center SVG) */
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  background-color: #503418;
+  color: var(--text-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  transform: translateZ(75px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.modal-close svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.modal-close:hover {
+  background-color: #000000;
+  transform: translateZ(85px) rotate(90deg) scale(1.08);
+}
+
+/* Tombol Panah Kiri & Kanan Modal (100% Center SVG) */
+.modal-side-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateZ(80px);
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  background-color: rgba(254, 213, 125, 0.98);
+  border: 2.5px solid #503418;
+  color: #503418;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 20px rgba(80, 52, 24, 0.3);
+  cursor: pointer;
+}
+
+.modal-side-btn svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.modal-side-btn:hover {
+  background-color: #503418;
+  color: #FFFFFF;
+  transform: translateY(-50%) translateZ(90px) scale(1.12);
+}
+
+.modal-side-btn:active {
+  transform: translateY(-50%) translateZ(80px) scale(0.94);
+}
+
+.modal-side-btn.prev { left: 16px; }
+.modal-side-btn.next { right: 16px; }
+
+/* Panggung 3D Sebelah Kiri di Dalam Modal */
+.modal-image-col {
+  width: 430px;
+  height: 100%;
+  padding: 26px 16px 26px 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  perspective: 1100px;
+  transform-style: preserve-3d;
+}
+
+.modal-stage-box {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-stage-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+  border: 2.5px solid rgba(170, 118, 65, 0.35);
+  box-shadow:
+    inset 0 0 36px rgba(40, 20, 4, 0.35),
+    0 14px 32px rgba(80, 52, 24, 0.22);
+  transform: translateZ(0px);
+}
+
+.modal-stage-glow {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--flavor-glow) 0%, transparent 70%);
+  transform: translateZ(8px);
+  filter: blur(8px);
+  pointer-events: none;
+  transition: background 0.45s ease;
+}
+
+.modal-plate-shadow {
+  position: absolute;
+  inset: 16% 12% 14% 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(25, 12, 2, 0.68) 0%, rgba(25, 12, 2, 0.25) 55%, transparent 74%);
+  transform: translateZ(14px) translate3d(var(--shX, 0px), var(--shY, 14px), 0) scale(0.9);
+  filter: blur(12px);
+  pointer-events: none;
+  transition: transform 0.35s ease;
+}
+
+.modal-floating-wrapper {
+  position: relative;
+  width: 108%;
+  height: 108%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateZ(68px);
+  transform-style: preserve-3d;
+  animation: floatPlate3D 3.8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 15;
+}
+
+@keyframes floatPlate3D {
+  0%, 100% {
+    transform: translateZ(68px) translateY(0px);
+  }
+  50% {
+    transform: translateZ(78px) translateY(-9px);
+  }
+}
+
+.modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter:
+    drop-shadow(var(--shX, 0px) var(--shY, 18px) 22px rgba(30, 15, 3, 0.52))
+    drop-shadow(0 0 18px var(--flavor-glow));
+  transform: rotateX(var(--mrx, 0deg)) rotateY(var(--mry, 0deg)) scale(var(--mScale, 1.06));
+  transition:
+    transform 0.44s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 0.44s ease,
+    opacity 0.28s ease;
+  will-change: transform, filter;
+}
+
+.modal-body {
+  flex: 1;
+  height: 100%;
+  padding: 32px 76px 32px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  transform: translateZ(52px);
+  transform-style: preserve-3d;
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+}
+
+.modal-3d-switching-next .modal-image {
+  opacity: 0;
+  transform: translateZ(-20px) rotateY(-65deg) rotateZ(-18deg) translateX(52px) scale(0.68);
+}
+.modal-3d-switching-next .modal-body {
+  opacity: 0;
+  transform: translateZ(10px) rotateY(-25deg) translateX(32px);
+}
+
+.modal-3d-switching-prev .modal-image {
+  opacity: 0;
+  transform: translateZ(-20px) rotateY(65deg) rotateZ(18deg) translateX(-52px) scale(0.68);
+}
+.modal-3d-switching-prev .modal-body {
+  opacity: 0;
+  transform: translateZ(10px) rotateY(25deg) translateX(-32px);
+}
+
+.modal-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  min-height: 74px;
+  perspective: 700px;
+}
+
+.word-3d-pop {
+  display: inline-block;
+  opacity: 0;
+  transform: perspective(500px) rotateX(-65deg) translateY(18px) scale(0.9);
+  transform-origin: center bottom;
+  animation: wordFlipUp3D 0.46s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes wordFlipUp3D {
+  to {
+    opacity: 1;
+    transform: perspective(500px) rotateX(0deg) translateY(0) scale(1);
+  }
+}
+
+.modal-description {
+  font-size: 1.12rem;
+  line-height: 1.68;
+  color: #2c1d0e;
+  margin-bottom: 16px;
+}
+
+.modal-variant-pills {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.variant-pill-btn {
+  padding: 6px 11px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
+  background-color: rgba(255, 255, 255, 0.82);
+  color: #503418;
+  border: 2px solid rgba(80, 52, 24, 0.25);
+  box-shadow: 0 3px 0 rgba(80, 52, 24, 0.2);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.variant-pill-btn:hover {
+  transform: translateY(-2px);
+  border-color: #503418;
+  background-color: #FED57D;
+}
+
+.variant-pill-btn.active {
+  background-color: #503418;
+  color: #FED57D;
+  border-color: #503418;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(80, 52, 24, 0.3);
+}
+
+/* ==========================================================================
+   FRANCHISE PAGE - PERSIS MOCKUP (DENGAN PANAH SVG CENTER)
+   ========================================================================== */
+.franchise-section {
+  width: 100%;
+  padding: 120px 60px 80px;
+  max-width: 1240px;
+  margin: 0 auto;
+  perspective: 1500px;
+}
+
+.franchise-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.franchise-card {
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  align-self: start;
+  transform-style: preserve-3d;
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  box-shadow:
+    0 14px 34px rgba(80, 52, 24, 0.14),
+    0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+.franchise-card:hover {
+  box-shadow:
+    0 26px 56px rgba(80, 52, 24, 0.26),
+    0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.franchise-card.standar { background-color: var(--fs-bg-standar); }
+.franchise-card.premium { background-color: var(--fs-bg-premium); }
+
+.franchise-image {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.franchise-card:hover .franchise-image {
+  transform: scale(1.04);
+}
+
+.franchise-header {
+  padding: 26px 30px 4px;
+  text-align: center;
+  transform: translateZ(26px);
+}
+
+.franchise-header h3 {
+  font-size: 2.1rem;
+  font-weight: 900;
+  margin-bottom: 2px;
+}
+
+.franchise-card.standar .franchise-header h3,
+.franchise-card.standar .franchise-price {
+  color: var(--fs-text-standar);
+}
+
+.franchise-card.premium .franchise-header h3,
+.franchise-card.premium .franchise-price {
+  color: var(--fs-text-premium);
+}
+
+.franchise-price {
+  padding: 0 30px 18px;
+  text-align: center;
+  font-size: 1.55rem;
+  font-weight: 700;
+  transform: translateZ(26px);
+}
+
+.franchise-arrow-wrapper {
+  padding: 0 30px 26px;
+  text-align: center;
+  transform: translateZ(30px);
+}
+
+.franchise-arrow-btn {
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.25s ease;
+}
+
+.franchise-arrow-btn svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.franchise-card.standar .franchise-arrow-btn {
+  background-color: rgba(0, 0, 0, 0.12);
+  color: var(--fs-arrow-standar);
+}
+
+.franchise-card.premium .franchise-arrow-btn {
+  background-color: rgba(255, 255, 255, 0.16);
+  color: var(--fs-arrow-premium);
+}
+
+.franchise-arrow-btn:hover {
+  transform: scale(1.1);
+}
+
+.franchise-arrow-btn.rotated {
+  transform: rotate(180deg);
+}
+
+.franchise-details {
+  padding: 0 36px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+}
+
+.franchise-details.open {
+  padding: 0 36px 36px;
+  max-height: 900px;
+  opacity: 1;
+}
+
+.franchise-details ul {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.franchise-details li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.6;
+  transform: translateX(-10px);
+  opacity: 0;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.franchise-details.open li {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.franchise-card.standar .franchise-details li,
+.franchise-card.standar .franchise-details li::before {
+  color: var(--fs-text-standar);
+}
+
+.franchise-card.premium .franchise-details li,
+.franchise-card.premium .franchise-details li::before {
+  color: var(--fs-text-premium);
+}
+
+.franchise-details li::before {
+  content: '✓';
+  font-weight: 800;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.franchise-sim-cta-outside {
+  max-width: 1240px;
+  margin: 52px auto 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 800px;
+}
+
+.btn-simulasi-tunggal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 48px;
+  background-color: var(--bg-nav);
+  color: #503418;
+  font-family: 'Alegreya', serif;
+  font-weight: 900;
+  font-size: 1.45rem;
+  letter-spacing: 0.4px;
+  border-radius: 40px;
+  border: 3px solid #503418;
+  box-shadow:
+    0 7px 0 #503418,
+    0 14px 28px rgba(80, 52, 24, 0.26);
+  transform: translateY(0);
+  transition:
+    transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.18s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-simulasi-tunggal:hover {
+  background-color: #ffe094;
+  transform: translateY(-3px);
+  box-shadow:
+    0 10px 0 #503418,
+    0 18px 34px rgba(80, 52, 24, 0.34);
+}
+
+.btn-simulasi-tunggal:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 2px 0 #503418,
+    0 6px 14px rgba(80, 52, 24, 0.22);
+}
+
+/* ==========================================================================
+   FOOTER / ABOUT US
+   ========================================================================== */
+.footer {
+  background-color: var(--bg-footer);
+  padding: 20px 50px;
+  margin-top: auto;
+}
+
+.footer-content {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+/* Sisi Kiri: Tetap di Kiri (Logo Besar di Atas & Email di Bawahnya) */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-logo img {
+  height: 170px;
+  width: auto;
+  margin-top: -32px;
+  margin-bottom: -20px;
+  object-fit: contain;
+}
+
+.footer-contact-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-email {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.28rem;
+  font-weight: 700;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.footer-email:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+.footer-email img {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+/* Sisi Kanan: Digeser ke Kanan, Tulisan Besar, & Spasi Lega */
+.footer-social-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 40px;
+}
+
+.footer-address {
+  font-size: 1.28rem;
+  font-weight: 700;
+  color: #111;
+  text-align: right;
+}
+
+.footer-social-row {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.social-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.28rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.social-item:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+.social-item img {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE TABLET & HP (NAVBAR & FOOTER RAPI TANPA OVERFLOW)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0 24px;
+  }
+  .navbar-logo {
+    margin-left: 0;
+  }
+  .navbar-logo img {
+    height: 100px;
+  }
+  .navbar-menu {
+    width: auto;
+    gap: 18px;
+  }
+  .navbar-link {
+    font-size: 1.4rem;
+  }
+  .hero-section,
+  .outlet-section,
+  .menu-section,
+  .franchise-section {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .franchise-grid {
+    grid-template-columns: 1fr;
+  }
+  .outlet-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .outlet-image {
+    width: 100%;
+    height: 240px;
+    border-radius: 22px 22px 0 0;
+  }
+  .modal-content {
+    width: 100%;
+    max-width: 820px;
+    height: auto;
+    min-height: 400px;
+  }
+  .modal-image-col {
+    width: 44%;
+    padding: 24px 12px 24px 66px;
+  }
+  .modal-stage-box {
+    height: 320px;
+  }
+  .modal-body {
+    padding: 28px 66px 28px 18px;
+  }
+  .footer {
+    padding: 24px 24px;
+  }
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+  .footer-social-group {
+    justify-content: center;
+    gap: 20px;
+  }
+  .footer-address {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  /* NAVBAR MOBILE: 1 Baris Proporsional & Tidak Meluber */
+  .navbar {
+    height: 64px;
+    padding: 0 12px;
+    justify-content: space-between;
+  }
+  .navbar-logo {
+    height: 64px;
+    margin-left: 0;
+    flex-shrink: 0;
+  }
+  .navbar-logo a {
+    height: 64px;
+  }
+  .navbar-logo img {
+    height: 62px;
+    max-width: 115px;
+    object-fit: contain;
+    transform: rotate(-3deg) translateZ(0);
+  }
+  .navbar-menu {
+    width: auto;
+    max-width: none;
+    gap: 4px;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+  .navbar-link {
+    font-size: 1rem;
+    padding: 4px 6px;
+    letter-spacing: 0;
+  }
+  .navbar-link::after {
+    left: 6px;
+    right: 6px;
+    height: 2.5px;
+  }
+
+  /* HERO SLIDER MOBILE */
+  .hero-section {
+    margin-top: 76px;
+    padding: 14px 16px 24px;
+  }
+  .hero-slider-wrapper {
+    border-radius: 20px;
+  }
+  .hero-slide img {
+    height: 38vh;
+    min-height: 230px;
+  }
+  .slider-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  .slider-arrow svg {
+    width: 20px;
+    height: 20px;
+  }
+  .slider-arrow.prev { left: 10px; }
+  .slider-arrow.next { right: 10px; }
+
+  /* OUTLET MOBILE */
+  .outlet-section {
+    padding: 20px 16px 40px;
+  }
+  .outlet-info {
+    padding: 18px 20px;
+  }
+  .outlet-name {
+    font-size: 1.4rem;
+  }
+  .outlet-address {
+    font-size: 1rem;
+  }
+
+  /* MENU MOBILE */
+  .menu-section {
+    padding: 96px 22px 50px;
+  }
+  .menu-title {
+    font-size: 2.1rem;
+    margin-bottom: 32px;
+  }
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  /* MODAL 3D MOBILE */
+  .modal-overlay {
+    padding: 14px;
+  }
+  .modal-content {
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    min-height: 0;
+    max-height: 88vh;
+    overflow-y: auto;
+    border-radius: 22px;
+  }
+  .modal-image-col {
+    width: 100%;
+    height: auto;
+    padding: 54px 24px 8px;
+  }
+  .modal-stage-box {
+    height: 225px;
+    border-radius: 18px;
+  }
+  .modal-body {
+    width: 100%;
+    height: auto;
+    padding: 12px 24px 28px;
+    text-align: center;
+  }
+  .modal-title {
+    font-size: 1.65rem;
+    margin-bottom: 10px;
+    min-height: 0;
+  }
+  .modal-title div,
+  .modal-title span {
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-description {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .modal-variant-pills {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .modal-side-btn {
+    top: 165px;
+    width: 38px;
+    height: 38px;
+  }
+  .modal-side-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  .modal-side-btn.prev { left: 8px; }
+  .modal-side-btn.next { right: 8px; }
+
+  /* FRANCHISE MOBILE */
+  .franchise-section {
+    padding: 96px 16px 50px;
+  }
+  .franchise-image {
+    height: 230px;
+  }
+  .franchise-header h3 {
+    font-size: 1.75rem;
+  }
+  .franchise-price {
+    font-size: 1.35rem;
+  }
+  .franchise-details.open {
+    padding: 0 22px 26px;
+  }
+  .franchise-details li {
+    font-size: 1.02rem;
+  }
+  .franchise-sim-cta-outside {
+    margin-top: 34px;
+  }
+  .btn-simulasi-tunggal {
+    width: 100%;
+    max-width: 340px;
+    font-size: 1.25rem;
+    padding: 14px 28px;
+  }
+
+  /* FOOTER MOBILE: Susun Vertikal Rapi & Tidak Melebar Keluar Layar */
+  .footer {
+    padding: 26px 16px 28px;
+  }
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 18px;
+  }
+  .footer-brand {
+    width: 100%;
+    align-items: center;
+  }
+  .footer-logo img {
+    height: 92px;
+    margin-top: -12px;
+    margin-bottom: -8px;
+  }
+  .footer-email {
+    font-size: 1rem;
+    gap: 8px;
+    justify-content: center;
+    word-break: break-all;
+  }
+  .footer-email img,
+  .social-item img {
+    width: 22px;
+    height: 22px;
+  }
+  .footer-social-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .footer-address {
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.45;
+  }
+  .footer-social-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px 18px;
+    width: 100%;
+  }
+  .social-item {
+    font-size: 1rem;
+    gap: 8px;
+    justify-content: center;
+  }
+}
+
+/* Penyesuaian Tambahan untuk Layar HP Kecil (360px - 420px) */
+@media (max-width: 420px) {
+  .navbar {
+    height: 60px;
+    padding: 0 8px;
+  }
+  .navbar-logo,
+  .navbar-logo a {
+    height: 60px;
+  }
+  .navbar-logo img {
+    height: 52px;
+    max-width: 96px;
+  }
+  .navbar-menu {
+    gap: 2px;
+  }
+  .navbar-link {
+    font-size: 0.88rem;
+    padding: 4px 5px;
+  }
+}
